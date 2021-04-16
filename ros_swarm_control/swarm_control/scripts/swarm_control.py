@@ -34,6 +34,7 @@ size_of_drone = 0
 param_path = "../param/config.yaml"
 
 drone_offset_list = list()  # [name :str, offset :Point, prevPoint: PoseStamped]
+
 markers_goal = MarkerArray()
 markers_goal_text = MarkerArray()
 markers_lerp = MarkerArray()
@@ -229,6 +230,11 @@ def load_params(form):
     """
     global size_of_drone, drone_offset_list, markers_goal, state_init_flag, goal_common_msgs
 
+
+    prev_array = []
+    for i in drone_offset_list:
+        prev_array.append(copy.deepcopy(i))
+
     del drone_offset_list[:]
     del markers_goal.markers[:]
     del markers_lerp.markers[:]
@@ -242,17 +248,20 @@ def load_params(form):
     size_of_drone = form.count
     # drone_offset_list [name :str, offset :Point, prevPoint: Goal]
 
-
     for i in range(size_of_drone):
         # try:
         offset_data = Point()
         offset_data.x = struct[i][0]
         offset_data.y = struct[i][1]
         offset_data.z = 0.
+
         new_goal = PoseStamped()
-        new_goal.pose.position.x = offset_data.x
-        new_goal.pose.position.y = offset_data.y
-        new_goal.pose.position.z = offset_data.z
+        if state_init_flag is False or len(prev_array) < i:
+            new_goal.pose.position.x = offset_data.x
+            new_goal.pose.position.y = offset_data.y
+            new_goal.pose.position.z = offset_data.z
+        else:
+            new_goal = prev_array[i][2]
 
         drone_offset_list.append([form.tag + "_" + str(i), offset_data, new_goal])
 
@@ -269,6 +278,9 @@ def reset_pose():
     :return:
     """
     global drone_offset_list, state_init_flag, goal_common_msgs
+
+    if state_init_flag:
+        return
 
     for i in range(len(drone_offset_list)):
         offset = drone_offset_list[i][1]
@@ -510,7 +522,7 @@ if __name__ == '__main__':
     else:
         # test
         formation.type = FormationParam.KLIN
-        formation.count = 3
+        formation.count = 5
         formation.distance = 1.0
         formation.tag = "drone"
         load_params(formation)
