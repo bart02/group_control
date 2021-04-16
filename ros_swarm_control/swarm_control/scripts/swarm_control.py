@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding=utf8
 
 import math
@@ -23,7 +23,7 @@ max_vel = 1.0
 use_yaml = False
 
 # Параметры планировщика
-use_field = True
+use_field = False
 allow_z_field = False
 r_safe = 1.2  # дальность действия поля отталкивания
 r_kor = 0.3  # коридор нулевых сил
@@ -88,7 +88,7 @@ def set_formation_srv(req):
     :return:
     """
     global formation
-    print "get form", req
+    print("get form", req)
     if req.formation.tag != "":
         formation = req.formation
         load_params(req.formation)
@@ -109,7 +109,7 @@ def set_field_srv(req):
     :return:
     """
     global use_field, allow_z_field, r_safe, force_rep
-    print "set field param", req
+    print("set field param", req)
     try:
         allow_z_field = req.field.allow_z_field
         use_field = req.field.use_field
@@ -128,10 +128,10 @@ def set_max_vel(req):
     global max_vel
     if req.data >= 0.:
         max_vel = req.data
-        print "set max vel", max_vel
+        print("set max vel", max_vel)
         return True
     else:
-        print "set max vel ERROR"
+        print("set max vel ERROR")
         return False
 
 
@@ -302,7 +302,7 @@ def setup_market(name, point, id, colorRGBA, text_flag=False):
     :return:
     """
     marker = Marker()
-    marker.header.frame_id = "/map"
+    marker.header.frame_id = "map"
     marker.header.stamp = rospy.Time.now()
     marker.ns = "marker"
     marker.id = id
@@ -513,7 +513,7 @@ if __name__ == '__main__':
     allow_z_field = rospy.get_param("~allow_z_field", allow_z_field)
 
     if use_yaml:
-        print("yaml path:",param_path)
+        print(("yaml path:",param_path))
         if param_path == "":
             rospy.logerr("Param not set")
             sys.exit()
@@ -522,7 +522,7 @@ if __name__ == '__main__':
     else:
         # test
         formation.type = FormationParam.KLIN
-        formation.count = 5
+        formation.count = 6
         formation.distance = 1.0
         formation.tag = "drone"
         load_params(formation)
