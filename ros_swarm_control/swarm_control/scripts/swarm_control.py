@@ -18,7 +18,7 @@ from swarm_msgs.srv import *
 
 # ---------------------------------------------------------------------------------------------------------------------
 # ---------- Global params
-tag = "drone_"
+tag = "mavros"
 max_vel = 1.0
 use_yaml = False
 
@@ -263,7 +263,7 @@ def load_params(form):
         else:
             new_goal = prev_array[i][2]
 
-        drone_offset_list.append([form.tag + "_" + str(i), offset_data, new_goal])
+        drone_offset_list.append([form.tag + "" + str(i), offset_data, new_goal])
 
         markers_goal.markers.append(Marker())
         markers_goal_text.markers.append(Marker())
@@ -524,7 +524,7 @@ if __name__ == '__main__':
         formation.type = FormationParam.KLIN
         formation.count = 6
         formation.distance = 1.0
-        formation.tag = "drone"
+        formation.tag = "mavros"
         load_params(formation)
 
 
@@ -604,7 +604,7 @@ if __name__ == '__main__':
                 markers_goal_text.markers[i] = setup_market(name_of_drone,
                                                             _drone_goal_msgs.pose.position,
                                                             i, [0.0, 0.3, 0.0, 1.0], text_flag=True)
-                rospy.Publisher(name_of_drone + "/goal", PoseStamped, queue_size=1).publish(lerp_goal)
+                rospy.Publisher(name_of_drone + "/setpoint_position/local", PoseStamped, queue_size=1).publish(lerp_goal)
             # except:
             #     print "error len"
 
