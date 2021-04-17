@@ -66,7 +66,7 @@ if __name__ == "__main__":
         print('done')
         # print(setpoint_local_position)
         # rospy.sleep(10)
-    rospy.sleep(10)
+    rospy.sleep(1*n)
     p = PoseStamped()
     p.pose.position.x = 0.0
     p.pose.position.y = -72.0

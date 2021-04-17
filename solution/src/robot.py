@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from time import sleep
 from math import pi
 import rospy
@@ -8,9 +10,21 @@ from swarm_msgs.srv import FloatSrv
 
 
 rospy.init_node("goal_publisher")
+
+startt = True
+
+def st(m):
+    global starting, startt
+    starting.unregister()
+    startt = False
+
+
+
 pub = rospy.Publisher("/goal", PoseStamped)
 reform = rospy.ServiceProxy('/reform', Trigger)
 set_vel = rospy.ServiceProxy('/swarm_contol/set_max_velocity', FloatSrv)
+
+starting = rospy.Subscriber('/goal', PoseStamped, )
 
 # Function to move by XY-axis
 
@@ -48,11 +62,14 @@ br = [-41, -72, 5, 2 * pi]
 
 iterations = 3
 
+while not startt:
+    rospy.sleep(0.1)
+rospy.sleep(10)
 for _ in range(iterations):
-    set_vel(1)
-    reform()
-    sleep(5)
     set_vel(12)
+    reform()
+    # sleep(5)
+    # set_vel(12)
 
     p = PoseStamped()
     direction = 0
@@ -81,6 +98,8 @@ for _ in range(iterations):
     p.pose.orientation.x, p.pose.orientation.y, p.pose.orientation.z, p.pose.orientation.w = quaternion_from_euler(
         0., 0., direction)
     pub.publish(p)
+
+    reform()
 
     # from TOP-LEFT to BOTTOM-LEFT corner
     for pos in moveXY(tl, bl, delay):
