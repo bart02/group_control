@@ -15,6 +15,8 @@ from tf.transformations import *
 from virt_formation import create_virtual_structure
 from swarm_msgs.msg import FormationParam, CommonParams
 from swarm_msgs.srv import *
+from std_msgs.msg import String
+from std_srvs.srv import Trigger
 
 # ---------------------------------------------------------------------------------------------------------------------
 # ---------- Global params
@@ -45,6 +47,7 @@ state_init_flag = False
 
 
 formation = FormationParam()
+
 
 
 # tools
@@ -222,6 +225,67 @@ def load_params_from_path(path):
         except:
             rospy.logerr("%s:param not found" % (tag + str(i)))
         i += 1
+
+
+def set_formation_topic(kkk):
+    """
+    Load data of drones from topic
+    :type path: str
+    :return:
+    """
+
+    global size_of_drone, drone_offset_list, markers_goal, goal_common_msgs, state_init_flag
+
+    prev_array = []
+    for i in drone_offset_list:
+        prev_array.append(copy.deepcopy(i))
+
+    print(prev_array)
+
+    drone_offset_list = list()
+    markers_goal.markers = list()
+    markers_lerp.markers = list()
+    markers_lerp_text.markers = list()
+    markers_goal_text.markers = list()
+
+    form_arr = rospy.wait_for_message("/formations_generator/formation", String).data.split()
+    form_num = form_arr[0]
+    form_title = form_arr[1]
+    for i in range(2, len(form_arr), 3):
+        try:
+            offset_str = tag + str(i - 2)
+            offset_data = Point()
+            offset_data.x = float(form_arr[i])
+            offset_data.y = float(form_arr[i + 1])
+            offset_data.z = float(form_arr[i + 2])
+
+
+            new_goal = PoseStamped()
+            if state_init_flag is False or len(prev_array) < ((i - 2)//3)+1:
+                new_goal.header.frame_id = "map"
+                new_goal.header.stamp = rospy.Time.now()
+                new_goal.pose.position.x = offset_data.x
+                new_goal.pose.position.y = offset_data.y
+                new_goal.pose.position.z = offset_data.z
+                new_goal.pose.orientation.w = 1.
+            else:
+                new_goal = prev_array[((i - 2)//3)][2]
+
+            # if state_init_flag:
+            #     new_goal.pose.position.x += goal_common_msgs.pose.position.x
+            #     new_goal.pose.position.y += goal_common_msgs.pose.position.y
+            #     new_goal.pose.position.z += goal_common_msgs.pose.position.z
+
+            drone_offset_list.append([tag + str(((i - 2)//3)+1), offset_data, new_goal])
+            print(drone_offset_list)
+            markers_goal.markers.append(Marker())
+            markers_goal_text.markers.append(Marker())
+            markers_lerp.markers.append(Marker())
+            markers_lerp_text.markers.append(Marker())
+
+        except:
+            rospy.logerr("%s:param not found" % (tag + str(((i - 2)//3)+1)))
+    return [True, 'ok']
 
 def load_params(form):
     """
@@ -513,6 +577,8 @@ if __name__ == '__main__':
     use_field = rospy.get_param("~use_field", use_field)
     allow_z_field = rospy.get_param("~allow_z_field", allow_z_field)
 
+
+
     if use_yaml:
         print(("yaml path:",param_path))
         if param_path == "":
@@ -524,7 +590,7 @@ if __name__ == '__main__':
         # test
         formation.type = FormationParam.ECHELON
         formation.count = 6
-        formation.distance = 1.0
+        formation.distance = 1.5
         formation.tag = "mavros"
         load_params(formation)
 
@@ -533,6 +599,7 @@ if __name__ == '__main__':
     srv_form = rospy.Service('swarm_contol/set_fotmation', FormationSrv, set_formation_srv)
     srv_field = rospy.Service('swarm_contol/set_field', FieldSrv, set_field_srv)
     srv_vel = rospy.Service('swarm_contol/set_max_velocity', FloatSrv, set_max_vel)
+    rospy.Service("/reform", Trigger, set_formation_topic)
 
     pub_params = rospy.Publisher("swarm_contol/state", CommonParams, queue_size=10)
 

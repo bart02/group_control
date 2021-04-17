@@ -3,9 +3,14 @@ from math import pi
 import rospy
 from geometry_msgs.msg import TwistStamped, PoseStamped
 from tf.transformations import *
+from std_srvs.srv import Trigger
+from swarm_msgs.srv import FloatSrv
+
 
 rospy.init_node("goal_publisher")
 pub = rospy.Publisher("/goal", PoseStamped)
+reform = rospy.ServiceProxy('/reform', Trigger)
+set_vel = rospy.ServiceProxy('/swarm_contol/set_max_velocity', FloatSrv)
 
 # Function to move by XY-axis
 
@@ -44,9 +49,14 @@ br = [-41, -72, 5, 2 * pi]
 iterations = 3
 
 for _ in range(iterations):
+    set_vel(1)
+    reform()
+    sleep(5)
+    set_vel(12)
+
     p = PoseStamped()
     direction = 0
-    delay = 0.3
+    delay = 0.2
 
     # from START to TOP-RIGHT corner
     for pos in moveXY(sp, tr, delay):
