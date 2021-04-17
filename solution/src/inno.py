@@ -8,7 +8,7 @@ from mavros_msgs.srv import SetMode, CommandBool, CommandVtolTransition, Command
 
 from threading import Thread
 
-n = 6
+n = 24
 
 rospy.init_node("innosharks")
 
@@ -20,8 +20,11 @@ arming = [rospy.ServiceProxy("/mavros{}/cmd/arming".format(i), CommandBool) for 
 
 goal_pub = rospy.Publisher("/goal", PoseStamped, queue_size=10)
 
+print('INIT COMPL')
+
 
 def send_position():
+    rospy.logerr('SET POSITION STARTED')
     r = rospy.Rate(10)
     while not rospy.is_shutdown():
         for i in range(n):
@@ -38,38 +41,38 @@ def start_thread():
 def takeoff(i):
     print("/mavros{}/local_position/pose".format(i+1))
     current_pose = rospy.wait_for_message("/mavros{}/local_position/pose".format(i+1), PoseStamped)
+    print(current_pose)
     setpoint_local_position[i].pose.position.x = current_pose.pose.position.x
     setpoint_local_position[i].pose.position.y = current_pose.pose.position.y
-    setpoint_local_position[i].pose.position.z = 5.0
+    setpoint_local_position[i].pose.position.z = 1.0
     setpoint_local_position[i].pose.orientation.x = 0.0
     setpoint_local_position[i].pose.orientation.y = 0.0
     setpoint_local_position[i].pose.orientation.z = 0.0
     setpoint_local_position[i].pose.orientation.w = 0.0
 
-    rospy.sleep(0.5)
+    rospy.sleep(1)
 
     setmode[i](custom_mode="OFFBOARD")
     arming[i](True)
 
 
-def set_position(x,y,z):
-    setpoint_local_position[0].pose.position.x = x
-    setpoint_local_position[0].pose.position.y = y
-    setpoint_local_position[0].pose.position.z = z
-
 
 if __name__ == "__main__":
     start_thread()
+    rospy.sleep(5)
     for i in range(n):
-        print(i, "takeoff")
+        rospy.logerr(str(i) + "takeoff")
         takeoff(i)
-        print('done')
+        # t = Thread(target=takeoff, args=(i,))
+        # t.start()
+        rospy.logerr('done')
         # print(setpoint_local_position)
         # rospy.sleep(10)
-    rospy.sleep(1*n)
-    p = PoseStamped()
-    p.pose.position.x = 0.0
-    p.pose.position.y = -72.0
-    p.pose.position.z = 5.0
-    goal_pub.publish(p)
+    rospy.sleep(5)
+    # p = PoseStamped()
+    # p.pose.position.x = 0.0
+    # p.pose.position.y = -72.0
+    # p.pose.position.z = 0.0
+    # goal_pub.publish(p)
+    rospy.logerr("STOPPPP")
 

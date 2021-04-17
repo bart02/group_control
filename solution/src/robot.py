@@ -24,7 +24,7 @@ pub = rospy.Publisher("/goal", PoseStamped)
 reform = rospy.ServiceProxy('/reform', Trigger)
 set_vel = rospy.ServiceProxy('/swarm_contol/set_max_velocity', FloatSrv)
 
-starting = rospy.Subscriber('/goal', PoseStamped, )
+starting = rospy.Subscriber('/goal', PoseStamped, st)
 
 # Function to move by XY-axis
 
@@ -54,17 +54,17 @@ def moveXY(start, end, dt):
         sleep(dt)
 
 
-sp = [0, -72, 5, 0]
-tr = [41, -72, 5, pi/2]
-tl = [41, 72, 5, pi]
-bl = [-41, 72, 5, 3 * pi / 2]
-br = [-41, -72, 5, 2 * pi]
+sp = [0, -72, 0, 0]
+tr = [41, -72, 0, pi/2]
+tl = [41, 72, 0, pi]
+bl = [-41, 72, 0, 3 * pi / 2]
+br = [-41, -72, 0, 2 * pi]
 
 iterations = 3
 
-while not startt:
+while startt:
     rospy.sleep(0.1)
-rospy.sleep(10)
+
 for _ in range(iterations):
     set_vel(12)
     reform()

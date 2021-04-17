@@ -26,10 +26,10 @@ use_yaml = True
 
 # Параметры планировщика
 use_field = True
-allow_z_field = False
+allow_z_field = True
 r_safe = 1.2  # дальность действия поля отталкивания
 r_kor = 0.3  # коридор нулевых сил
-force_rep = 0.8  # коэффициент ф-ии отталкивания
+force_rep = 1  # коэффициент ф-ии отталкивания
 
 size_of_drone = 0
 
@@ -589,7 +589,7 @@ if __name__ == '__main__':
     else:
         # test
         formation.type = FormationParam.ECHELON
-        formation.count = 6
+        formation.count = 24
         formation.distance = 1.5
         formation.tag = "mavros"
         load_params(formation)
