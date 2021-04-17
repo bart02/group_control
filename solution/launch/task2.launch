@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="solution" name="takeoff" type="to2.py" output="screen"/>
+    <include file="$(find swarm_control)/launch/swarm_control.launch" />
+    <node pkg="solution" name="routing" type="topic_parser.py" output="screen"/>
+</launch>

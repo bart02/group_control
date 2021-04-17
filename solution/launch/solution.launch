@@ -1,5 +1,0 @@
-<launch>
-    <node pkg="solution" name="takeoff" type="inno.py" output="screen"/>
-    <include file="$(find swarm_control)/launch/swarm_control.launch" />
-    <node pkg="solution" name="routing" type="robot.py" output="screen"/>
-</launch>

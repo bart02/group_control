@@ -24,7 +24,7 @@ pub = rospy.Publisher("/goal", PoseStamped)
 reform = rospy.ServiceProxy('/reform', Trigger)
 set_vel = rospy.ServiceProxy('/swarm_contol/set_max_velocity', FloatSrv)
 
-starting = rospy.Subscriber('/goal', PoseStamped, )
+starting = rospy.Subscriber('/goal', PoseStamped, st)
 
 # Function to move by XY-axis
 
