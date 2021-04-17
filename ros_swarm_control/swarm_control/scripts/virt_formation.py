@@ -172,6 +172,9 @@ def create_virtual_structure(formation, angle=0.0, length=0., width=0.):
                 k = k + 1
                 Virtual_formation[k, :] = np.array([a / 2 + i * a, 0])
                 k = k + 1
+        print(Virtual_formation)
+        Virtual_formation = np.sort(Virtual_formation, 0)[::-1]
+        print(Virtual_formation)
     elif formation.type == FormationParam.CIRCLE:
         d = formation.distance + 2 * safety_radius_rtp
         # определяется по дуге окружности

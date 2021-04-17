@@ -19,11 +19,11 @@ from swarm_msgs.srv import *
 # ---------------------------------------------------------------------------------------------------------------------
 # ---------- Global params
 tag = "mavros"
-max_vel = 1.0
-use_yaml = False
+max_vel = 100.0
+use_yaml = True
 
 # Параметры планировщика
-use_field = False
+use_field = True
 allow_z_field = False
 r_safe = 1.2  # дальность действия поля отталкивания
 r_kor = 0.3  # коридор нулевых сил
@@ -196,6 +196,7 @@ def load_params_from_path(path):
     while len(drone_offset_list) < size_of_drone:
         try:
             offset_str = yaml.load(data)[tag + str(i)]
+            print(offset_str)
             offset_data = Point()
             offset_data.x = offset_str['x']
             offset_data.y = offset_str['y']
@@ -213,7 +214,7 @@ def load_params_from_path(path):
                 new_goal.pose.position.y += goal_common_msgs.pose.position.y
                 new_goal.pose.position.z += goal_common_msgs.pose.position.z
 
-            drone_offset_list.append([tag + str(i), offset_data, new_goal])
+            drone_offset_list.append([tag + str(i+1), offset_data, new_goal])
             markers_goal.markers.append(Marker())
             markers_goal_text.markers.append(Marker())
             markers_lerp.markers.append(Marker())
@@ -263,7 +264,7 @@ def load_params(form):
         else:
             new_goal = prev_array[i][2]
 
-        drone_offset_list.append([form.tag + "" + str(i), offset_data, new_goal])
+        drone_offset_list.append([form.tag + "" + str(i+1), offset_data, new_goal])
 
         markers_goal.markers.append(Marker())
         markers_goal_text.markers.append(Marker())
@@ -521,7 +522,7 @@ if __name__ == '__main__':
         load_params_from_path(param_path)
     else:
         # test
-        formation.type = FormationParam.KLIN
+        formation.type = FormationParam.ECHELON
         formation.count = 6
         formation.distance = 1.0
         formation.tag = "mavros"

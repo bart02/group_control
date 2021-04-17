@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+import sys
+
 import rospy
 from geometry_msgs.msg import TwistStamped, PoseStamped
 from mavros_msgs.msg import PositionTarget, State, ExtendedState
@@ -14,6 +17,8 @@ setpoint_local_position = [PoseStamped() for i in range(1, n+1)]
 
 setmode = [rospy.ServiceProxy("/mavros{}/set_mode".format(i), SetMode) for i in range(1, n+1)]
 arming = [rospy.ServiceProxy("/mavros{}/cmd/arming".format(i), CommandBool) for i in range(1, n+1)]
+
+goal_pub = rospy.Publisher("/goal", PoseStamped, queue_size=10)
 
 
 def send_position():
@@ -61,9 +66,10 @@ if __name__ == "__main__":
         print('done')
         # print(setpoint_local_position)
         # rospy.sleep(10)
-    # rospy.sleep(10)
-    # set_position(1, 0, 2)
-    # rospy.sleep(10)
-    # set_position(1, 0, 2)
-    while not rospy.is_shutdown():
-        pass
+    rospy.sleep(10)
+    p = PoseStamped()
+    p.pose.position.x = 0.0
+    p.pose.position.y = -72.0
+    p.pose.position.z = 5.0
+    goal_pub.publish(p)
+
