@@ -15,7 +15,7 @@ from tf.transformations import *
 from virt_formation import create_virtual_structure
 from swarm_msgs.msg import FormationParam, CommonParams
 from swarm_msgs.srv import *
-from std_msgs.msg import String
+from std_msgs.msg import String, Bool
 from std_srvs.srv import Trigger
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -30,6 +30,9 @@ allow_z_field = True
 r_safe = 1.2  # дальность действия поля отталкивания
 r_kor = 0.3  # коридор нулевых сил
 force_rep = 0.8  # коэффициент ф-ии отталкивания
+
+
+min_dist_formation = 0.3 # минимальная дистанция формации
 
 size_of_drone = 0
 
@@ -445,6 +448,8 @@ def rotate_point(point, rot):
     newPoint.z = point.z
     return newPoint
 
+
+
 def speed_limit_goal(new_goal, prev_goal, dt, max_speed):
     """
 
@@ -604,6 +609,7 @@ if __name__ == '__main__':
     pub_params = rospy.Publisher("swarm_contol/state", CommonParams, queue_size=10)
 
     # pub markers
+    pub_formation_state = rospy.Publisher("swarm_contol/is_formation", Bool, queue_size=10)
     pub_markers_goal = rospy.Publisher("/goal_markers", MarkerArray, queue_size=10)
     pub_markers_goal_text = rospy.Publisher("/goal_markers/text", MarkerArray, queue_size=10)
     pub_markers_goal_lerp = rospy.Publisher("/goal_markers/lerp", MarkerArray, queue_size=10)
@@ -626,8 +632,8 @@ if __name__ == '__main__':
                 continue
 
             dt = rospy.get_time() - old_time
-            # try:
-                # Перебираем массив всех дронов
+            dist_array = []
+            # Перебираем массив всех дронов
             for i in range(len(drone_offset_list)):
                 _drone_goal_msgs.header.stamp = rospy.Time.now()
 
@@ -644,6 +650,10 @@ if __name__ == '__main__':
                     lerp_goal.pose.orientation = goal_common_msgs.pose.orientation
                 else:
                     lerp_goal = _drone_goal_msgs
+
+                # поиск дистанции
+                dist_array.append(get_distance(_drone_goal_msgs, drone_offset_list[i][2]))
+
 
                 # get course
                 course = get_course(_drone_goal_msgs, lerp_goal)
@@ -674,8 +684,13 @@ if __name__ == '__main__':
                                                             _drone_goal_msgs.pose.position,
                                                             i, [0.0, 0.3, 0.0, 1.0], text_flag=True)
                 rospy.Publisher(name_of_drone + "/setpoint_position/local", PoseStamped, queue_size=1).publish(lerp_goal)
-            # except:
-            #     print "error len"
+
+            min_dist = min(dist_array)
+
+            if min_dist < min_dist_formation:
+                pub_formation_state.publish(True)
+            else:
+                pub_formation_state.publish(False)
 
 
             pub_markers_goal.publish(markers_goal)
