@@ -3,7 +3,7 @@
 	<!-- start  marker_server_node -->
 	<node pkg="swarm_control" name="interactive_goals_node" type="marker_server" respawn="true" output="log"/>
 	<node pkg="swarm_control" name="swarm_marker_node" type="swarm_control.py" 	respawn="true" output="screen">
-		<param name="use_yaml" value="false"/>
+		<param name="use_yaml" value="true"/>
 		<param name="path" value="$(find swarm_control)/param/config.yaml"/>
 		<param name="max_vel" value="1.0"/>
 	</node>

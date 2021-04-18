@@ -54,22 +54,23 @@ def moveXY(start, end, dt):
         sleep(dt)
 
 
-sp = [0, -72, 0, 0]
-tr = [41, -72, 0, pi/2]
-tl = [41, 72, 0, pi]
-bl = [-41, 72, 0, 3 * pi / 2]
-br = [-41, -72, 0, 2 * pi]
+sp = [0, -80, 10, pi/2]
+tr = [41, -80, 10, 0]
+tl = [41, 72, 10, -pi/2]
+bl = [-41, 72, 10, pi]
+br = [-41, -80, 10, pi/2]
 
 iterations = 3
 
 while startt:
     rospy.sleep(0.1)
-
+rospy.sleep(10)
 for _ in range(iterations):
-    set_vel(12)
+    set_vel(2)
     reform()
+    rospy.sleep(20)
     # sleep(5)
-    # set_vel(12)
+    set_vel(6)
 
     p = PoseStamped()
     direction = 0
@@ -99,7 +100,7 @@ for _ in range(iterations):
         0., 0., direction)
     pub.publish(p)
 
-    reform()
+
 
     # from TOP-LEFT to BOTTOM-LEFT corner
     for pos in moveXY(tl, bl, delay):
@@ -112,6 +113,12 @@ for _ in range(iterations):
     p.pose.orientation.x, p.pose.orientation.y, p.pose.orientation.z, p.pose.orientation.w = quaternion_from_euler(
         0., 0., direction)
     pub.publish(p)
+
+    set_vel(2)
+    reform()
+    rospy.sleep(20)
+    # sleep(5)
+    set_vel(6)
 
     # from BOTTOM-LEFT to BOTTOM-RIGHT corner
     for pos in moveXY(bl, br, delay):

@@ -44,7 +44,7 @@ def takeoff(i):
     print(current_pose)
     setpoint_local_position[i].pose.position.x = current_pose.pose.position.x
     setpoint_local_position[i].pose.position.y = current_pose.pose.position.y
-    setpoint_local_position[i].pose.position.z = 1.0
+    setpoint_local_position[i].pose.position.z = 5.0
     setpoint_local_position[i].pose.orientation.x = 0.0
     setpoint_local_position[i].pose.orientation.y = 0.0
     setpoint_local_position[i].pose.orientation.z = 0.0
@@ -62,17 +62,17 @@ if __name__ == "__main__":
     rospy.sleep(5)
     for i in range(n):
         rospy.logerr(str(i) + "takeoff")
-        takeoff(i)
-        # t = Thread(target=takeoff, args=(i,))
-        # t.start()
+        # takeoff(i)
+        t = Thread(target=takeoff, args=(i,))
+        t.start()
         rospy.logerr('done')
         # print(setpoint_local_position)
         # rospy.sleep(10)
-    rospy.sleep(5)
-    # p = PoseStamped()
-    # p.pose.position.x = 0.0
-    # p.pose.position.y = -72.0
-    # p.pose.position.z = 0.0
-    # goal_pub.publish(p)
+    rospy.sleep(20)
+    p = PoseStamped()
+    p.pose.position.x = 0.0
+    p.pose.position.y = -80.0
+    p.pose.position.z = 5.0
+    goal_pub.publish(p)
     rospy.logerr("STOPPPP")
 

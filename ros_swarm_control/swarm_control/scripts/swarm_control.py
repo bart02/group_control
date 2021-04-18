@@ -29,7 +29,7 @@ use_field = True
 allow_z_field = True
 r_safe = 1.2  # дальность действия поля отталкивания
 r_kor = 0.3  # коридор нулевых сил
-force_rep = 1  # коэффициент ф-ии отталкивания
+force_rep = 0.8  # коэффициент ф-ии отталкивания
 
 size_of_drone = 0
 
@@ -199,7 +199,7 @@ def load_params_from_path(path):
     while len(drone_offset_list) < size_of_drone:
         try:
             offset_str = yaml.load(data)[tag + str(i)]
-            print(offset_str)
+            # print(offset_str)
             offset_data = Point()
             offset_data.x = offset_str['x']
             offset_data.y = offset_str['y']
@@ -240,7 +240,7 @@ def set_formation_topic(kkk):
     for i in drone_offset_list:
         prev_array.append(copy.deepcopy(i))
 
-    print(prev_array)
+    # print(prev_array)
 
     drone_offset_list = list()
     markers_goal.markers = list()
@@ -277,7 +277,7 @@ def set_formation_topic(kkk):
             #     new_goal.pose.position.z += goal_common_msgs.pose.position.z
 
             drone_offset_list.append([tag + str(((i - 2)//3)+1), offset_data, new_goal])
-            print(drone_offset_list)
+            # print(drone_offset_list)
             markers_goal.markers.append(Marker())
             markers_goal_text.markers.append(Marker())
             markers_lerp.markers.append(Marker())
@@ -588,7 +588,7 @@ if __name__ == '__main__':
         load_params_from_path(param_path)
     else:
         # test
-        formation.type = FormationParam.ECHELON
+        formation.type = FormationParam.KLIN
         formation.count = 24
         formation.distance = 1.5
         formation.tag = "mavros"
@@ -631,6 +631,7 @@ if __name__ == '__main__':
             for i in range(len(drone_offset_list)):
                 _drone_goal_msgs.header.stamp = rospy.Time.now()
 
+                # print(drone_offset_list[i])
                 name_of_drone = drone_offset_list[i][0]
                 # получаем целевую точку куда нужно двигаться
                 _drone_goal_msgs = rotate_goal(goal_common_msgs.pose.position, drone_offset_list[i][1],

@@ -1,34 +1,121 @@
-# set offset of drones
-# T letter
-size: 6
+size: 24
 
 mavros0:
   x: 0.0
-  y: -3.0
-  z: 11.0
+  y: 0.0
+  z: 0.0
 
 mavros1:
   x: 0.0
-  y: -1.0
-  z: 11.0
-  
+  y: 2.0
+  z: 0.0
+
 mavros2:
   x: 0.0
-  y: 1.0
-  z: 11.0
+  y: 4.0
+  z: 0.0
 
 mavros3:
   x: 0.0
-  y: 3.0
-  z: 11.0
-  
+  y: 6.0
+  z: 0.0
+
 mavros4:
   x: 0.0
-  y: 0.0
-  z: 8.0
-  
+  y: 8.0
+  z: 0.0
+
 mavros5:
   x: 0.0
+  y: 10.0
+  z: 0.0
+
+mavros6:
+  x: -2.0
   y: 0.0
-  z: 5.0
-  
+  z: 0.0
+
+mavros7:
+  x: -2.0
+  y: 2.0
+  z: 0.0
+
+mavros8:
+  x: -2.0
+  y: 4.0
+  z: 0.0
+
+mavros9:
+  x: -2.0
+  y: 6.0
+  z: 0.0
+
+mavros10:
+  x: -2.0
+  y: 8.0
+  z: 0.0
+
+mavros11:
+  x: -2.0
+  y: 10.0
+  z: 0.0
+
+mavros12:
+  x: -4.0
+  y: 0.0
+  z: 0.0
+
+mavros13:
+  x: -4.0
+  y: 2.0
+  z: 0.0
+
+mavros14:
+  x: -4.0
+  y: 4.0
+  z: 0.0
+
+mavros15:
+  x: -4.0
+  y: 6.0
+  z: 0.0
+
+mavros16:
+  x: -4.0
+  y: 8.0
+  z: 0.0
+
+mavros17:
+  x: -4.0
+  y: 10.0
+  z: 0.0
+
+mavros18:
+  x: -6.0
+  y: 0.0
+  z: 0.0
+
+mavros19:
+  x: -6.0
+  y: 2.0
+  z: 0.0
+
+mavros20:
+  x: -6.0
+  y: 4.0
+  z: 0.0
+
+mavros21:
+  x: -6.0
+  y: 6.0
+  z: 0.0
+
+mavros22:
+  x: -6.0
+  y: 8.0
+  z: 0.0
+
+mavros23:
+  x: -6.0
+  y: 10.0
+  z: 0.0
