@@ -59,7 +59,7 @@ def takeoff(i):
 
 if __name__ == "__main__":
     start_thread()
-    rospy.sleep(5)
+    rospy.sleep(3)
     for i in range(n):
         rospy.logerr(str(i) + "takeoff")
         # takeoff(i)
@@ -68,7 +68,7 @@ if __name__ == "__main__":
         rospy.logerr('done')
         # print(setpoint_local_position)
         # rospy.sleep(10)
-    rospy.sleep(20)
+    rospy.sleep(10)
     p = PoseStamped()
     p.pose.position.x = 0.0
     p.pose.position.y = -80.0

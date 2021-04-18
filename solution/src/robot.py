@@ -64,11 +64,11 @@ iterations = 3
 
 while startt:
     rospy.sleep(0.1)
-rospy.sleep(10)
+rospy.sleep(5)
 for _ in range(iterations):
     set_vel(2)
     reform()
-    rospy.sleep(20)
+    rospy.sleep(15)
     # sleep(5)
     set_vel(6)
 
@@ -116,7 +116,7 @@ for _ in range(iterations):
 
     set_vel(2)
     reform()
-    rospy.sleep(20)
+    rospy.sleep(15)
     # sleep(5)
     set_vel(6)
 
