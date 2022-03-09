@@ -631,7 +631,7 @@ if __name__ == '__main__':
             for i in range(len(drone_offset_list)):
                 _drone_goal_msgs.header.stamp = rospy.Time.now()
 
-                # print(drone_offset_list[i])
+                print(drone_offset_list[i])
                 name_of_drone = drone_offset_list[i][0]
                 # получаем целевую точку куда нужно двигаться
                 _drone_goal_msgs = rotate_goal(goal_common_msgs.pose.position, drone_offset_list[i][1],

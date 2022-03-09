@@ -8,7 +8,7 @@ from mavros_msgs.srv import SetMode, CommandBool, CommandVtolTransition, Command
 
 from threading import Thread
 
-n = 24
+n = 12
 
 rospy.init_node("innosharks")
 
